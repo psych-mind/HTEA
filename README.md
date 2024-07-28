@@ -1,19 +1,15 @@
 # HTEA
 The paper for HTEA
-# The code of "LightEA: A Scalable, Robust, and Interpretable Entity Alignment Framework via Three-view Label Propagation"
+# The code of "HTEA: Heterogeniety-aware temporal entity alignment"
 
 ## Datasets
 
 * ent_ids_1: ids for entities in source KG;
 * ent_ids_2: ids for entities in target KG;
-* sup_ent_ids: training entity pairs;
-* ref_ent_ids: testing entity pairs;
+* ref_pairs: the referenc pairs;
 * triples_1: relation triples encoded by ids in source KG;
 * triples_2: relation triples encoded by ids in target KG;
-* graph_cache.pkl: cache file of graphs
-* translated_ent_name: entity names translated by Google translator
-
-Due to the limitation of upload file size, the DBP1M dataset is not included here. You can download it from https://github.com/ZJU-DAILY/LargeEA.
+* time_id: the temporal point ids
 
 ## Environment
 
