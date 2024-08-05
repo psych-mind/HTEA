@@ -7,9 +7,9 @@
 * ref_pairs: the referenc pairs;
 * triples_1: relation triples encoded by ids in source KG;
 * triples_2: relation triples encoded by ids in target KG;
-* time_id: the temporal point ids
-* rel_id_1: relation id for the source KG;
-* rel_id_2: relation id for the target Kzg
+* time_id: ids for temporal points;
+* rel_id_1: ids for relations in the source KG;
+* rel_id_2: ids for relations in the target KG;
 
 ## Environment
 
