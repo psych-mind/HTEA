@@ -229,9 +229,9 @@ def gen_hetero_stat(ranks_index, ranks_dic_wiki, all_pair_dic, ent_int_dict):
     rec_tem_w2 = index_tem_triples_w(new_triples_2_)
     rec_align_wr = check_align_pair(rec_tem_wr1, rec_tem_w2)
     rec_temp_wr = extract_temp_fact(rec_align_wr)
-    rec_temp_wrp = process_temp(rec_temp_wr)
+    #rec_temp_wrp = process_temp(rec_temp_wr)
 
-    hetero_info, homo_info = extract_hetero_temp(rec_temp_wrp)
+    hetero_info, homo_info = extract_hetero_temp_r(rec_temp_wr, rel_emb, threshold=0.3)
     hetero_set = gen_hetero_set(hetero_info)
     hetero_set_refine = hetero_refine(hetero_set)
     hetero_set_dict_refine = gen_interval_pair(hetero_set_refine)
@@ -259,10 +259,16 @@ dev_pair, all_pair_dic, ent_int_dict):
         if sym == 0:
             try:
                 output = dto.readobj('embedding_of_' + save_suffix() + '_' + str(sym))
+                state_dict = torch.load('embedding_of_' + \
+                save_suffix() + '_' + str(sym) + '.pt')
+                rel_emb = state_dict['rel_emb']
+                rel_norm = F.normalize(rel_emb)
             except:
                 model = train(time_int_matrix, time_int_val, sym)
                 torch.save(model.state_dict(), 'embedding_of_' + \
                 save_suffix() + '_' + str(sym) + '.pt')
+                rel_emb = model.state_dict()['rel_emb']
+                rel_norm = F.normalize(rel_emb)
                 output = dto.readobj('embedding_of_' + save_suffix() + '_' + str(sym))
         else:
             ent_int_dict, valid_int_set = gen_hetero_stat(ranks_index, \
