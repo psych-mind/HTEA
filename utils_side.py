@@ -94,48 +94,29 @@ def check_align_pair(rec_tem_1, rec_tem_2):
             rec[pairs] = [info_y, rec_tem_2[(tail, head)]]
     return rec
 
-def extract_temp_fact(rec_align):
-    """visualize with the temporal info"""
+def extract_hetero_temp_r(rec_temp_p, rel_norm, threshold=0.3):
+    """
+    extract the heterogenous temeporal for the temporal triples
+    considering with relation.
+    """
     rec = {}
-    for pairs, infos in rec_align.items():
-        info_y = infos[0][1:]
-        info_w = infos[1]
-        info_y_ = []
-        for i in info_y:
-            ts, te = i[-2], i[-1]
-            info_y_.append([ts, te])
-        info_w_ = []
-        for i in info_w:
-            ts, te = i[-2], i[-1]
-            info_w_.append([ts, te])
-        rec[pairs] = [info_y_, info_w_]
-    return rec
-
-def process_temp(rec_temp):
-    """filter the missing temporal with the existing value"""
-    rec = {}
-    for pair, infos in rec_temp.items():
+    rec_homo = {}
+    for pair, infos in rec_temp_p.items():
+        sym = 0
         info_y = infos[0]
         info_w = infos[1]
-        info_y_, info_w_ = [], []
+        rel_y, rel_w = infos[-1][0], infos[-1][1]
+        #first check with the relation
+        if np.dot(rel_norm[rel_y].cpu(), rel_norm[rel_w].cpu()) < threshold:
+            continue
         for info in info_y:
-            ts, te = info
-            #if ts == 0:
-            #    print(1)
-            if te == 0:
-                te = ts
-            info_y_.append([ts, te])
-        for info in info_w:
-            ts, te = info
-            #if ts == 0:
-            #    print(ts, te)
-            if te == 0:
-                te = ts
-            if ts == 0:
-                ts = te
-            info_w_.append([ts, te])
-        rec[pair] = [info_y_, info_w_]
-    return rec
+            if info in info_w:
+                sym = 1
+        if sym == 1:
+            rec_homo[pair] = infos
+        else:
+            rec[pair] = infos
+    return rec, rec_homo
 
 def gen_predict_dic(ranks_index, ranks_dic_wiki, all_pair_dic):
     """get the predict dict based on the ranks index"""
