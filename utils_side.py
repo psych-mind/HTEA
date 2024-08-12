@@ -128,22 +128,32 @@ def gen_predict_dic(ranks_index, ranks_dic_wiki, all_pair_dic):
             rec[index_y] = ranks_dic_wiki[index_y][0]
     return rec
 
-def extract_hetero_temp(rec_temp_p):
-    """extract the heterogenous temeporal for the temporal triples"""
+def extract_temp_fact(rec_align):
+    """visualize with the temporal info"""
     rec = {}
-    rec_homo = {}
-    for pair, infos in rec_temp_p.items():
-        sym = 0
-        info_y = infos[0]
+    for pairs, infos in rec_align.items():
+        info_y = infos[0][1:]
         info_w = infos[1]
-        for info in info_y:
-            if info in info_w:
-                sym = 1
-        if sym == 1:
-            rec_homo[pair] = infos
-        else:
-            rec[pair] = infos
-    return rec, rec_homo
+        info_y_ = []
+        for i in info_y:
+            rel_y, ts, te = i[-4], i[-2], i[-1]
+            if te == 0:
+                te = ts
+            info_y_.append([ts, te])
+        #rec_y = {}
+        #rec_y[rel_y] = info_y_
+        info_w_ = []
+        for i in info_w:
+            rel_w, ts, te = i[-4], i[-2], i[-1]
+            if te == 0:
+                te = ts
+            if ts == 0:
+                ts = te
+            info_w_.append([ts, te])
+        #rec_w = {}
+        #rec_w[rel_w] = info_w_
+        rec[pairs] = [info_y_, info_w_, (rel_y, rel_w)]
+    return rec
 
 def gen_hetero_set(hetero_info):
     rec = {}
